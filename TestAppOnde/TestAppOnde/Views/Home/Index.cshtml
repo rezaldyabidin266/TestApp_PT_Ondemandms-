@@ -1,0 +1,103 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .section-file {
+        width: 500px;
+    }
+
+    .padding-custom {
+
+        padding-bottom:4rem;
+        padding-top:2rem;
+    }
+
+    div.dt-buttons {
+        float: right;
+    }
+
+    div.dt-container .dt-paging {
+        float: right;
+    }
+
+    @@media (max-width: 767.98px) {
+        .section-file {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container padding-custom">
+    <div class="section-file mb-4">
+        <label for="formFile" class="form-label">Upload File Excel Transaksi</label>
+        @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="d-flex">
+                <input class="form-control" type="file" name="file" id="formFile">
+                <input class="btn btn-primary ms-3" type="submit" value="Upload File" />
+            </div>
+        }
+    </div>
+
+    <table id="transaksiTable" class="display mt-5 responsive" style="width:100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Invoice</th>
+                <th>Harga</th>
+                <th>Discount</th>
+                <th>User</th>
+                <th>Status</th>
+                <th>Tanggal Transaksi</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#transaksiTable').DataTable({
+            "ajax": {
+                "url": "@Url.Action("GetTransaksiData", "Home")",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "id" },
+                { "data": "invoice" },
+                { "data": "harga" },
+                { "data": "discount" },
+                { "data": "user" },
+                { "data": "status" },
+                { "data": "tgl_Transaksi" }
+            ],
+            "dom": 'Bfrtip',
+            "buttons": [
+                'copy', 'csv', 'excel', 'pdf'
+            ],
+            responsive: true,
+            "select": true,
+
+        });
+
+        table.on('select', function (e, dt, type, indexes) {
+            var rowData = table.rows(indexes).data().toArray();
+            console.log(rowData); // Perform any action with the selected row data
+        });
+
+    });
+</script>
+
+
+
+
+@*  <div class="form-upload">
+        <h3>Upload File Excel Transaksi</h3>
+        <div class="file-upload">
+            @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="file" name="file" />
+                <input type="submit" value="Upload" />
+            }
+        </div>
+</div> *@
